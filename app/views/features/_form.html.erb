@@ -1,0 +1,33 @@
+<%= form_for([:house, feature]) do |f| %>
+  <%= hidden_field_tag :house_id, f.object.house_id %>
+  <% if feature.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(feature.errors.count, "error") %> prohibited this feature from being saved:</h2>
+
+      <ul>
+      <% feature.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class='row'>
+    <div class='col-xs-4'>
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </div>
+    <div class='col-xs-4'>
+      <%= f.label :score %>
+      <%= f.number_field :score %>
+    </div>
+    <div class='col-xs-4'>
+      <%= f.label :weight %>
+      <%= f.number_field :weight %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

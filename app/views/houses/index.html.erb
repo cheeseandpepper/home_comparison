@@ -1,0 +1,36 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Houses</h1>
+
+<%= link_to 'New House', new_house_path %>
+<table class='table'>
+  <thead>
+    <tr>
+      <th>Address</th>
+      <th>Beds</th>
+      <th>Baths</th>
+      <th>Price</th>
+      <th>Image</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @houses.each do |house| %>
+      <tr>
+        <td><%= house.address.split(',').first %></td>
+        <td><%= house.beds %></td>
+        <td><%= house.baths %></td>
+        <td><%= number_to_currency(house.price, precision: 0) %></td>
+        <td><%= image_tag house.image_url, width: "200px" unless house.image_url.blank? %></td>
+        <td><%= link_to 'Show Features', house %></td>
+        <td><%= link_to 'Edit House', edit_house_path(house) %></td>
+        <td><%= link_to 'Destroy House', house, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+

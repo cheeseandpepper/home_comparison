@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+<h1>Features</h1>
+<%= form_for(@house) do |f| %>
+  <%= f.fields_for :feature do |ff| %>
+    <% if @house.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@house.errors.count, "error") %> prohibited this house from being saved:</h2>
+
+        <ul>
+        <% @house.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= link_to 'New Feature', new_house_feature_path(@house.id) %>
+    <table class='table'>
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>score</th>
+          <th>weight</th>
+          
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @features.each do |feature| %>
+          <tr>
+            <td><%= feature.name %></td>
+            <td><%= feature.score %></td>
+            <td><%= feature.weight %></td>
+            <td><%= link_to 'Show', house_feature_path(@house, feature) %></td>
+            <td><%= link_to 'Edit', edit_house_feature_path(@house, feature) %></td>
+            <td><%= link_to 'Destroy', house_feature_path(@house, feature), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>
+
+
+<%= link_to 'Edit', edit_house_path(@house) %> |
+<%= link_to 'Back', houses_path %>
