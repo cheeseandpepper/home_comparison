@@ -2,18 +2,13 @@ class House < ApplicationRecord
 
   has_many :features
   after_touch :calculate_score
+  after_create :build_feature_factory
+  
 
-  # def score
-  #   features.sum(:score)
-  # end
+  def build_feature_factory
+    Factories::FeatureFactory.new(self.id)
+  end
 
-  # def max_score
-  #   max = 0
-  #   features.each do |feature|
-  #     max = max + (100 * feature.weight)
-  #   end
-  #   max
-  # end
 
   def calculate_score
     score = 0
@@ -23,7 +18,7 @@ class House < ApplicationRecord
      score     = (score + (feature.score * feature.weight))
     end
     self.max_score = max_score
-    self.score = ((score / max_score) * 100)
+    self.score = score
     save!
   end
 

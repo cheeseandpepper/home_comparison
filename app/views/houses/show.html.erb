@@ -30,10 +30,10 @@
 
       <tbody>
         <% @features.each do |feature| %>
-          <tr>
+          <tr data-feature-id="<%= feature.id %>" data-house-id="<%= @house.id%>">
             <td><%= feature.name %></td>
-            <td><%= feature.score %></td>
-            <td><%= feature.weight %></td>
+            <td><input type='number' id='feature-score'><%= feature.score %></input></td>
+            <td><input type='number' id='feature-weight'><%= feature.weight %></input></td>
             <td><%= link_to 'Show', house_feature_path(@house, feature) %></td>
             <td><%= link_to 'Edit', edit_house_feature_path(@house, feature) %></td>
             <td><%= link_to 'Destroy', house_feature_path(@house, feature), method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -47,3 +47,26 @@
 
 <%= link_to 'Edit', edit_house_path(@house) %> |
 <%= link_to 'Back', houses_path %>
+
+
+<script>
+$('tr input').on('change', function(event) {
+  var target    = event.target;
+  var column    = target.id.split('-')[1];
+  var value     = target.value;
+  var featureId = $(target).closest('tr').data('feature-id')
+  var houseId   = $(target).closest('tr').data('house-id')
+  
+  var data = {};
+  data[column] = value;
+  data["featureId"] = featureId;
+  var url = '/houses/' + houseId + '/features/' + featureId;
+
+  $.ajax({
+    type: 'PUT',
+    url: url,
+    data: { feature: data }
+  })
+})
+
+</script>

@@ -1,19 +1,20 @@
 module Factories
   class HouseFactory
-    attr_reader :doc, :house
+    attr_reader :data, :house
     
-    def initialize(html)
-      @doc = Nokogiri::HTML(html)
+    def initialize(data)
+      @data = data
       @house = House.new(build_params)
     end
 
     def build_params
       {
-        image_url: @doc.css('img').attr('src').value,
-        price: @doc.css("span[itemprop='price']").attr('content').value,
-        address: @doc.css('img').attr('title'),
-        baths: @doc.css(".info-block[data-rf-test-id='abp-baths']").children.first.text,
-        beds: @doc.css(".info-block[data-rf-test-id='abp-beds']").children.first.text
+        link:      data.links[:homedetails],
+        image_url: nil,
+        price:     data.price,
+        address:   data.address[:street],
+        baths:     data.bathrooms,
+        beds:      data.bedrooms
       }
     end
   end

@@ -10,23 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170213072936) do
+ActiveRecord::Schema.define(version: 20170215034641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "features", force: :cascade do |t|
     t.string   "name"
-    t.float    "score"
-    t.float    "weight"
+    t.integer  "score"
+    t.integer  "weight"
     t.integer  "house_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "houses", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
     t.string   "name"
     t.integer  "price"
     t.string   "address"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20170213072936) do
     t.float    "baths"
     t.float    "score"
     t.float    "max_score"
+    t.string   "city_state_zip"
   end
 
 end

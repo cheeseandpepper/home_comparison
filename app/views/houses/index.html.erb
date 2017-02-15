@@ -7,6 +7,7 @@
   <thead>
     <tr>
       <th>Address</th>
+      <th>Overall Score</th>
       <th>Beds</th>
       <th>Baths</th>
       <th>Price</th>
@@ -20,11 +21,12 @@
     <% @houses.each do |house| %>
       <tr>
         <td><%= house.address.split(',').first %></td>
+        <td><%= ((house.score / house.max_score) * 100).round(2) %></td>
         <td><%= house.beds %></td>
         <td><%= house.baths %></td>
         <td><%= number_to_currency(house.price, precision: 0) %></td>
-        <td><%= image_tag house.image_url, width: "200px" unless house.image_url.blank? %></td>
-        <td><%= link_to 'Show Features', house %></td>
+        <td><a href="<%= house.link %>" target="blank"><%= image_tag house.image_url, width: "200px" unless house.image_url.blank? %></a></td>
+        <td><%= link_to 'Show Features', house_features_path(house.id) %></td>
         <td><%= link_to 'Edit House', edit_house_path(house) %></td>
         <td><%= link_to 'Destroy House', house, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

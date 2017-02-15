@@ -1,19 +1,35 @@
 module Factories
   class FeatureFactory
-    attr_reader :doc, :feature
-    def initialize(html)
-      @doc = Nokogiri::HTML(html)
-      @feature = Feature.new(build_params)
+    
+    def initialize(house_id)
+      build_features!(house_id)
     end
 
-    def build_params
-      {
-        image_url: @doc.css('img').attr('src').value,
-        price: @doc.css("span[itemprop='price']").attr('content').value,
-        address: @doc.css('img').attr('title'),
-        baths: @doc.css(".info-block[data-rf-test-id='abp-baths']").children.first.text,
-        beds: @doc.css(".info-block[data-rf-test-id='abp-beds']").children.first.text
-      }
+    def features
+      %w(
+        bedrooms
+        bathrooms
+        backyard
+        kitchen
+        appliances
+        central_air
+        central_heat
+        garage
+        shed
+        porch
+        view
+        access
+        location
+        character
+      )
     end
+
+    def build_features!(house_id)
+      features.each do |feature|
+        Feature.create!(name: feature, score: 1, weight: 1, house_id: house_id)
+      end
+      
+    end
+  
   end
 end

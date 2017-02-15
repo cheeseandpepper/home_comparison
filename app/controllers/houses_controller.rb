@@ -27,18 +27,26 @@ class HousesController < ApplicationController
   # POST /houses
   # POST /houses.json
   def create
-    page   = HTTParty.get(house_params[:link], headers: {"User-Agent" => USER_AGENT})
-    @house = Factories::HouseFactory.new(page).house
-    
-    respond_to do |format|
-      if @house.save
-        format.html { redirect_to @house, notice: 'House was successfully created.' }
-        format.json { render :show, status: :created, location: @house }
-      else
-        format.html { render :new }
-        format.json { render json: @house.errors, status: :unprocessable_entity }
+    #page   = HTTParty.get(house_params[:link], headers: {"User-Agent" => USER_AGENT})
+    data = Rubillow::PropertyDetails.deep_search_results(
+      { address:  house_params[:link], citystatezip: house_params[:city_state_zip] }
+    )
+    @house = Factories::HouseFactory.new(data).house
+
+    if data.code != 0
+      render json: { errors: [{code: data.code, message: data.message}]}  
+    else
+      respond_to do |format|
+        if @house.save
+          format.html { redirect_to house_features_path(@house.id), notice: 'House was successfully created.' }
+          format.json { render :show, status: :created, location: @house }
+        else
+          format.html { render :new }
+          format.json { render json: @house.errors, status: :unprocessable_entity }
+        end
       end
     end
+    
   end
 
   # PATCH/PUT /houses/1
@@ -73,6 +81,6 @@ class HousesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def house_params
-      params.require(:house).permit(:name, :address, :price, :link, :image_url)
+      params.require(:house).permit(:name, :address, :price, :link, :image_url, :city_state_zip)
     end
 end

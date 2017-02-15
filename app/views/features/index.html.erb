@@ -3,8 +3,27 @@
 <h1>Features</h1>
 
 <div class='well'>
-  <%= image_tag @house.image_url, width: 400 %>
-  <p>Score: <span> <%= @house.score %></span></p>
+  <div class='row'>
+    <div class='col-xs-6'>
+      <%= image_tag @house.image_url, width: 400 if @house.image_url %>
+    </div>
+
+    <div class='col-xs-6'>
+      <ul class='score-list'>
+        <li>
+          <p>Score: <span id='house-score'> <%= @house.score %></span></p>
+        </li>
+        <li>
+          <p>Max Score: <span id='house-max-score'> <%= @house.max_score %></span></p>
+        </li>
+        <li>
+          <p>Overall Rating: <span id='house-overall-score'> <%= ((@house.score / @house.max_score) * 100).round(2) %></span></p>
+        </li>
+      </ul>
+      
+    </div>
+
+  </div>
 </div>
 
 <%= link_to 'New Feature', new_house_feature_path() %>
@@ -20,13 +39,8 @@
 
   <tbody>
     <% @features.each do |feature| %>
-      <tr>
-        <td><%= feature.name %></td>
-        <td><%= feature.score %></td>
-        <td><%= feature.weight %></td>
-        <td><%= link_to 'Show', house_feature_path(feature.house_id, feature) %></td>
-        <td><%= link_to 'Edit', edit_house_feature_path(feature.house_id, feature) %></td>
-        <td><%= link_to 'Destroy', house_feature_path(feature.house_id, feature), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <tr data-feature-id="<%= feature.id %>" data-house-id="<%= @house.id%>">
+        <%= render partial: 'feature_row', locals: { feature: feature } %>
       </tr>
     <% end %>
   </tbody>
@@ -34,3 +48,35 @@
 
 <br>
 
+
+
+<script>
+$('tr input').on('change', function(event) {
+  var target    = event.target;
+  var column    = target.id.split('-')[1];
+  var value     = target.value;
+  var featureId = $(target).closest('tr').data('feature-id')
+  var houseId   = $(target).closest('tr').data('house-id')
+  
+  var data = {};
+  data[column] = value;
+  var url = '/houses/' + houseId + '/features/' + featureId;
+
+  $.ajax({
+    type: 'PUT',
+    url: url,
+    dataType: 'json',
+    data: { feature: data },
+    success: function(data) {
+      var score = data.score;
+      var maxScore = data.max_score;
+
+      $('ul.score-list').find('#house-score').text(score)
+      $('ul.score-list').find('#house-max-score').text(maxScore)
+      $('ul.score-list').find('#house-overall-score').text(((score / maxScore) * 100))
+
+    }
+  })
+})
+
+</script>

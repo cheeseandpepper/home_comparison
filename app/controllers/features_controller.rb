@@ -44,8 +44,7 @@ class FeaturesController < ApplicationController
   def update
     respond_to do |format|
       if @feature.update(feature_params)
-        format.html { redirect_to house_features_path, notice: 'Feature was successfully updated.' }
-        format.json { render :show, status: :ok, location: @feature }
+        format.js   { render json: { score: @feature.house.score, max_score: @feature.house.max_score } }
       else
         format.html { render :edit }
         format.json { render json: @feature.errors, status: :unprocessable_entity }

@@ -34,6 +34,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'httparty'
 
 gem 'nokogiri'
+gem 'rubillow'
 # Use Capistrano for deployment
 
 # gem 'capistrano-rails', group: :development
