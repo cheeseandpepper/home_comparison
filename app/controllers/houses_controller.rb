@@ -27,12 +27,18 @@ class HousesController < ApplicationController
   # POST /houses
   # POST /houses.json
   def create
-    #page   = HTTParty.get(house_params[:link], headers: {"User-Agent" => USER_AGENT})
+    structured_address = house_params[:address].split(', ')
+
+    address = structured_address[0]
+    citystatezip = "#{structured_address[1]}, #{structured_address[2]}"
+
     data = Rubillow::PropertyDetails.deep_search_results(
-      { address:  house_params[:link], citystatezip: house_params[:city_state_zip] }
+      { address:  address, citystatezip: citystatezip }
     )
     @house = Factories::HouseFactory.new(data).house
-
+    page = HTTParty.get(@house.link, headers: {"User-Agent" => USER_AGENT})
+    @house.page = page
+    @house.image_url = Nokogiri::XML(page).css('.mobile-photo').attr('src').value
     if data.code != 0
       render json: { errors: [{code: data.code, message: data.message}]}  
     else
@@ -77,6 +83,9 @@ class HousesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_house
       @house = House.find(params[:id])
+      session[:house_score] = @house.score
+      session[:house_max_score] = @house.max_score
+      session[:house_overall_score] = @house.overall_score
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

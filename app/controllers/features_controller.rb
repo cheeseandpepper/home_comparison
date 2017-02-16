@@ -6,6 +6,9 @@ class FeaturesController < ApplicationController
   def index
     @house= House.find(params[:house_id])
     @features = @house.features
+    session[:house_score] = @house.score
+    session[:house_max_score] = @house.max_score
+    session[:house_overall_score] = @house.overall_score
   end
 
   # GET /features/1
@@ -44,7 +47,7 @@ class FeaturesController < ApplicationController
   def update
     respond_to do |format|
       if @feature.update(feature_params)
-        format.js   { render json: { score: @feature.house.score, max_score: @feature.house.max_score } }
+        format.js   { render json: { score: @feature.house.score, max_score: @feature.house.max_score, overall_score: @feature.house.overall_score } }
       else
         format.html { render :edit }
         format.json { render json: @feature.errors, status: :unprocessable_entity }

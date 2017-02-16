@@ -5,21 +5,12 @@
 <div class='well'>
   <div class='row'>
     <div class='col-xs-6'>
-      <%= image_tag @house.image_url, width: 400 if @house.image_url %>
+      <a href="<%= @house.link %>" target="blank">
+        <%= image_tag @house.image_url, width: 400 if @house.image_url %>
+      </a>
     </div>
 
     <div class='col-xs-6'>
-      <ul class='score-list'>
-        <li>
-          <p>Score: <span id='house-score'> <%= @house.score %></span></p>
-        </li>
-        <li>
-          <p>Max Score: <span id='house-max-score'> <%= @house.max_score %></span></p>
-        </li>
-        <li>
-          <p>Overall Rating: <span id='house-overall-score'> <%= ((@house.score / @house.max_score) * 100).round(2) %></span></p>
-        </li>
-      </ul>
       
     </div>
 
@@ -70,10 +61,11 @@ $('tr input').on('change', function(event) {
     success: function(data) {
       var score = data.score;
       var maxScore = data.max_score;
+      var overallScore = data.overall_score;
 
-      $('ul.score-list').find('#house-score').text(score)
-      $('ul.score-list').find('#house-max-score').text(maxScore)
-      $('ul.score-list').find('#house-overall-score').text(((score / maxScore) * 100))
+      $('.score-list').find('#house-score').text(score)
+      $('.score-list').find('#house-max-score').text(maxScore)
+      $('.score-list').find('#house-overall-score').text(overallScore)  
 
     }
   })

@@ -35,6 +35,7 @@ gem 'httparty'
 
 gem 'nokogiri'
 gem 'rubillow'
+gem 'geocomplete_rails'
 # Use Capistrano for deployment
 
 # gem 'capistrano-rails', group: :development

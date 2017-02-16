@@ -25,9 +25,8 @@
         <td><%= house.beds %></td>
         <td><%= house.baths %></td>
         <td><%= number_to_currency(house.price, precision: 0) %></td>
-        <td><a href="<%= house.link %>" target="blank"><%= image_tag house.image_url, width: "200px" unless house.image_url.blank? %></a></td>
+        <td><a href="<%= house.link %>" target="blank"><%= image_tag house.image_url, width: "100px" unless house.image_url.blank? %></a></td>
         <td><%= link_to 'Show Features', house_features_path(house.id) %></td>
-        <td><%= link_to 'Edit House', edit_house_path(house) %></td>
         <td><%= link_to 'Destroy House', house, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>

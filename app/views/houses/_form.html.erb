@@ -12,13 +12,11 @@
   <% end %>
 
   <div class='row'>
-    <div class='col-xs-4'>
-      <%= f.label :link %>
-      <%= f.text_field :link %>
-    </div>
-    <div class='col-xs-4'>
-      <%= f.label :city_state_zip %>
-      <%= f.text_field :city_state_zip %>
+    <div class='col-xs-12'>
+      <div class="input-group">
+        <%= f.label :address %>
+        <%= f.text_field :address, class: 'address-input form-control', size: 70 %>
+      </div>
     </div>
   </div>
 
@@ -26,3 +24,7 @@
     <%= f.submit %>
   </div>
 <% end %>
+
+<script>
+  $("input#house_address").geocomplete(); 
+</script>

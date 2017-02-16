@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170215034641) do
+ActiveRecord::Schema.define(version: 20170216052750) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,8 @@ ActiveRecord::Schema.define(version: 20170215034641) do
     t.float    "score"
     t.float    "max_score"
     t.string   "city_state_zip"
+    t.string   "house_ref"
+    t.text     "page"
   end
 
 end
