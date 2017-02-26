@@ -5,3 +5,8 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+
+FeatureType::DEFAULTS.each do |k, v|
+  FeatureType.create!(name: k, weight: v)
+end unless FeatureType.count > 0

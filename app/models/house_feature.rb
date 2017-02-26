@@ -1,0 +1,2 @@
+class HouseFeature < ApplicationRecord
+end

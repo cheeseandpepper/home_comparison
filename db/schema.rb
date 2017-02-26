@@ -10,18 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170216052750) do
+ActiveRecord::Schema.define(version: 20170220211213) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "feature_types", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "weight"
+    t.boolean  "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "features", force: :cascade do |t|
     t.string   "name"
     t.integer  "score"
     t.integer  "weight"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.integer  "house_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "feature_type_id"
+  end
+
+  create_table "house_images", force: :cascade do |t|
+    t.integer "house_id"
+    t.string  "url"
   end
 
   create_table "houses", force: :cascade do |t|
@@ -39,6 +53,8 @@ ActiveRecord::Schema.define(version: 20170216052750) do
     t.string   "city_state_zip"
     t.string   "house_ref"
     t.text     "page"
+    t.integer  "lot_size"
+    t.integer  "house_size"
   end
 
 end

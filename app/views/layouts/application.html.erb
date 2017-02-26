@@ -10,29 +10,8 @@
   </head>
 
   <body>
-    <div class='container'>
-
-      <div class='row page-top'>
-        <div class='col-xs-4 sidebar'>
-          <div class='score-list' data-spy="affix">
-            <div class='row'>
-              <div class='col-xs-8'><h1>Score: </h1></div>
-              <div class='col-xs-4'><h1><span id='house-score'> <%= session[:house_score] %></span></h1></div>
-            </div>
-            <div class='row'>
-              <div class='col-xs-8'><h1>Max Score: </h1></div>
-              <div class='col-xs-4'><h1><span id='house-max-score'> <%= session[:house_max_score] %></span></h1></div>
-            </div>
-            <div class='row'>  
-              <div class='col-xs-8'><h1>Overall Rating: </h1></div>
-              <div class='col-xs-4'><h1><span id='house-overall-score'> <%= session[:house_overall_score] %></span></h1></div>
-            </div>
-          </div>
-        </div>
-        <div class='col-xs-8'>
-          <%= yield %>
-        </div>
-      </div>
+    <div class='container'>          
+      <%= yield %>
     </div>
   </body>
 </html>

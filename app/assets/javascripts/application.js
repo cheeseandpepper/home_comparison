@@ -15,4 +15,5 @@
 //= require bootstrap-sprockets
 //= require turbolinks
 //= require geocomplete
+//= require jquery.slick
 //= require_tree .

@@ -36,6 +36,7 @@ gem 'httparty'
 gem 'nokogiri'
 gem 'rubillow'
 gem 'geocomplete_rails'
+gem "jquery-slick-rails"
 # Use Capistrano for deployment
 
 # gem 'capistrano-rails', group: :development

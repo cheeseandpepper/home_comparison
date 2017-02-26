@@ -30,7 +30,7 @@
 
   <tbody>
     <% @features.each do |feature| %>
-      <tr data-feature-id="<%= feature.id %>" data-house-id="<%= @house.id%>">
+      <tr data-feature-id="<%= feature.id %>" data-house-id="<%= @house.id %>">
         <%= render partial: 'feature_row', locals: { feature: feature } %>
       </tr>
     <% end %>

@@ -1,7 +1,7 @@
 class HousesController < ApplicationController
   before_action :set_house, only: [:show, :edit, :update, :destroy]
 
-  USER_AGENT = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19"
+  USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
 
   # GET /houses
   # GET /houses.json
@@ -28,23 +28,26 @@ class HousesController < ApplicationController
   # POST /houses.json
   def create
     structured_address = house_params[:address].split(', ')
-
-    address = structured_address[0]
-    citystatezip = "#{structured_address[1]}, #{structured_address[2]}"
+    address            = structured_address[0]
+    citystatezip       = "#{structured_address[1]}, #{structured_address[2]}"
 
     data = Rubillow::PropertyDetails.deep_search_results(
-      { address:  address, citystatezip: citystatezip }
+      { address: address, citystatezip: citystatezip }
     )
+
+    
     @house = Factories::HouseFactory.new(data).house
     page = HTTParty.get(@house.link, headers: {"User-Agent" => USER_AGENT})
     @house.page = page
-    @house.image_url = Nokogiri::XML(page).css('.mobile-photo').attr('src').value
+    
+    @house.image_url = Nokogiri::XML(page).css('.hip-photo')[0].attr('src')
+    
     if data.code != 0
       render json: { errors: [{code: data.code, message: data.message}]}  
     else
       respond_to do |format|
         if @house.save
-          format.html { redirect_to house_features_path(@house.id), notice: 'House was successfully created.' }
+          format.html { redirect_to house_path(@house.id), notice: 'House was successfully created.' }
           format.json { render :show, status: :created, location: @house }
         else
           format.html { render :new }
