@@ -17,7 +17,7 @@ class House < ApplicationRecord
   end
 
   def overall_score
-    score.round(2)
+    score&.round(2)
   end
 
   def updated_property_details
