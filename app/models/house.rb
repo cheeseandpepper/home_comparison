@@ -2,9 +2,13 @@ class House < ApplicationRecord
 
   has_many :features
   has_many :house_images
-  after_touch :calculate_score
+  after_touch :calculate_score, if: Proc.new { |h| h.has_score? }
   after_create :build_feature_factory
   #after_create :fetch_extra_details  
+
+  def has_score?
+    score.present?
+  end
 
   def build_feature_factory
     Factories::FeatureFactory.new(self.id)
@@ -13,7 +17,6 @@ class House < ApplicationRecord
 
   def fetch_extra_details
     data = Rubillow::PropertyDetails.updated_property_details(zpid: house_ref)
-    
   end
 
   def overall_score

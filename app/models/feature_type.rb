@@ -19,11 +19,23 @@ class FeatureType < ApplicationRecord
   }
 
   default_scope { order("lower (name)") }
-
+  after_create :apply_new_feature
   after_commit :update_all_features, if: Proc.new { |ft| ft.name_changed? }
+  before_destroy :remove_from_houses
 
   def update_all_features
     features = Feature.where(feature_type_id: self.id)
     features.update_all!(name: self.name, weight: self.weight)
+  end
+  
+  def remove_from_houses
+    Feature.find_by(feature_type_id: id)&.destroy
+    House.all.each(&:touch)
+  end
+
+  def apply_new_feature
+    House.all.each do |h|
+      h.features << Feature.new(house_id: h.id, feature_type_id: id, score: 5, weight: weight, name: name)
+    end
   end
 end

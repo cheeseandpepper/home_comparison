@@ -1,0 +1,32 @@
+<%= form_for(feature_type) do |f| %>
+  <% if feature_type.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(feature_type.errors.count, "error") %> prohibited this feature_type from being saved:</h2>
+
+      <ul>
+      <% feature_type.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class='row'>
+    <div class='col-xs-6'>
+      <div class="input-group">
+        <%= f.label :name %>
+        <%= f.text_field :name %>
+      </div>
+    </div>
+    <div class='col-xs-6'>
+      <div class="input-group">
+        <%= f.label :weight %>
+        <%= f.text_field :weight %>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

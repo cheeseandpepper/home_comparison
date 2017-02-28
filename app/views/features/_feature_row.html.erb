@@ -1,4 +1,4 @@
 <td><%= feature.name %></td>
 <td><input type='number' id='feature-score' value='<%= feature.score %>' min='1' max='100'></input></td>
-<td><input type='number' id='feature-weight' value='<%= feature.feature_type.weight %>' min='1' max='10'></input></td>
+<td><input type='number' id='feature-weight' value='<%= feature.feature_type.weight %>' min='1' max='10' disabled></input></td>
 <td><%= link_to 'Destroy', house_feature_path(feature.house_id, feature), method: :delete, data: { confirm: 'Are you sure?' } %></td>
