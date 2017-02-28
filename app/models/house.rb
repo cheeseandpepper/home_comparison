@@ -6,6 +6,8 @@ class House < ApplicationRecord
   after_create :build_feature_factory
   #after_create :fetch_extra_details  
 
+  default_scope { order(score: :desc) }
+
   def has_score?
     score.present?
   end
