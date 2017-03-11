@@ -18,8 +18,21 @@
           <div class='col-xs-8'><h1>Score: </h1></div>
           <div class='col-xs-4'><h1><span id='house-score'> <%= @house.overall_score %></span></h1></div>
         </div>
+        <div class='row'>
+          <div class='col-xs-8'><h1>Dollar Score: </h1></div>
+          <div class='col-xs-4'><h1><span id='house-dollar-score'> <%= @house.per_dollar_score.round(2) %></span></h1></div>
+        </div>
     </div>
 
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading" id="score-panel-heading">
+    <h3 class="panel-title">Score the house below</h3>
+  </div>
+  <div class="panel-body">
+    Here is where you score the house. Presumably you've seen the house and can really rate the features based on what you've seen. Give each feature a score of <b>1 - 100</b> where <b>100</b> is absolutely perfect. After you update each feature the score will update automatically. The weights are applied globally and <%= link_to "you can edit them here", settings_path %>. 
   </div>
 </div>
 
@@ -27,7 +40,7 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Score</th>
+      <th>Score (1-100)</th>
       <th>Weight</th>
       <th colspan="3"></th>
     </tr>
@@ -76,9 +89,11 @@ $('tr input').on('change', function(event) {
     data: { feature: data },
     success: function(data) {
       var score = data.overall_score;
+      var dollarScore = data.dollar_score
       //var maxScore = data.max_score;
       //var overallScore = data.overall_score;
 
+      $('.score-list').find('#house-dollar-score').text(dollarScore)
       $('.score-list').find('#house-score').text(score) 
     }
   })

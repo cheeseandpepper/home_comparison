@@ -47,7 +47,12 @@ class FeaturesController < ApplicationController
   def update
     respond_to do |format|
       if @feature.update(feature_params)
-        format.js   { render json: { score: @feature.house.score, max_score: @feature.house.max_score, overall_score: @feature.house.overall_score } }
+        format.js   { render json: { 
+          score: @feature.house.score, 
+          max_score: @feature.house.max_score,
+          overall_score: @feature.house.overall_score,
+          dollar_score: @feature.house.per_dollar_score.round(2)
+          } }
       else
         format.html { render :edit }
         format.json { render json: @feature.errors, status: :unprocessable_entity }

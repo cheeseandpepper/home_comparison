@@ -25,6 +25,10 @@ class House < ApplicationRecord
     score&.round(2)
   end
 
+  def per_dollar_score
+    overall_score / (price.to_f / 1_000_000.to_f).round(2)
+  end
+
   def updated_property_details
     Rubillow::PropertyDetails.updated_property_details({ zpid: house_ref })
   end
@@ -40,7 +44,6 @@ class House < ApplicationRecord
   end
 
   def calculate_score
-
     weighted_total = FeatureType.sum(:weight)
     weighted_sum   = features.map {|feature| feature.score * feature.weight}.sum
     score = (weighted_sum.to_f / weighted_total.to_f)
