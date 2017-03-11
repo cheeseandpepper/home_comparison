@@ -12,6 +12,10 @@ class House < ApplicationRecord
     score.present?
   end
 
+  def xml
+    Nokogiri::XML.parse(page)
+  end
+
   def build_feature_factory
     Factories::FeatureFactory.new(self.id)
   end

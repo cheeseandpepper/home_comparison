@@ -1,0 +1,15 @@
+<div class='row'>
+  <div class='col-xs-11'>
+    <input type='text' class='waypoint_address' size='70'>
+  </div>
+  <div class='col-xs-1'>
+    <%= fa_icon "minus-circle", class: 'remove-waypoint', onclick: 'removeWaypoint()' %>
+  </div>
+</div>
+
+<script>
+$("input.waypoint_address").geocomplete(); 
+$('.remove-waypoint').click(function() {
+  $(this).parent().remove()
+})
+</script>

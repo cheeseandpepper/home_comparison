@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+<%= link_to "Back", houses_path %>
+<h1>Open Houses</h1>
+
+<div class='row'>
+  <div class=col-xs-6>
+    <button class='generate-route'><%= fa_icon "map", text: "Generate Route" %></button>
+    <button class='add-waypoint'><%= fa_icon "plus-circle", text: "Add Waypoint" %></button>
+    <%= render partial: 'waypoint_input'%>
+    
+  </div>
+
+  <br />
+  
+  <div class='col-xs-6'>
+    <div class='row'>
+      <div class='col-xs-12'>
+        <iframe id='open-houses-map' width="100%" height="480px" src="https://www.google.com/maps/embed/v1/place?key=<%= GOOGLE_MAPS_KEY %>&q=Los+Angeles+CA"></iframe>    
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(".add-waypoint").click(function(e) {
+    $(e.target).parent().append("<%= escape_javascript(render partial: 'waypoint_input') %>")
+  })
+
+  $('.generate-route').click(function() {
+    var waypointStrings = [];
+    $('.waypoint_address').each(function(index, element) {
+      waypointStrings.push(element.value.split(' ').join('+'));
+    })
+    
+    var waypoints = waypointStrings.join("|");
+    var iframe    = document.getElementById('open-houses-map');
+    var baseSrc   = "https://www.google.com/maps/embed/v1/directions?key=<%= GOOGLE_MAPS_KEY %>&origin=3869+Tilden+Ave+LosAngeles+CA&destination=3869+Tilden+Ave+LosAngeles+CA&waypoints="
+  
+    iframe.src = baseSrc + waypoints;
+  })
+</script>
