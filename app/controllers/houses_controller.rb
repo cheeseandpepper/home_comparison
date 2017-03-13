@@ -37,7 +37,6 @@ class HousesController < ApplicationController
       { address: address, citystatezip: citystatezip }
     )
 
-    
     @house = Factories::HouseFactory.new(data).house
     page = HTTParty.get(@house.link, headers: {"User-Agent" => USER_AGENT})
     @house.page = page

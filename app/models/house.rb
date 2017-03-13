@@ -4,6 +4,7 @@ class House < ApplicationRecord
   has_many :house_images
   has_many :comments
   after_touch :calculate_score, if: Proc.new { |h| h.has_score? }
+  after_create :update_price
   after_create :build_feature_factory
   #after_create :fetch_extra_details  
 
@@ -19,6 +20,11 @@ class House < ApplicationRecord
 
   def build_feature_factory
     Factories::FeatureFactory.new(self.id)
+  end
+
+  def update_price
+    self.price = xml.css('.estimates .home-summary-row')[1].text.strip.gsub(/\$|,/, '').to_i
+    self.save!
   end
 
 
