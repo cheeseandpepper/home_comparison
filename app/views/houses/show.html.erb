@@ -36,8 +36,6 @@
   </div>
 </div>
 
-<%= link_to 'Discussion', house_comments_path(@house.id) %>
-
 <table class='table'>
   <thead>
     <tr>
@@ -72,16 +70,6 @@
     <%= render partial: 'comment_panel_blank', locals: { time_stamp: Time.now.to_i, new_comment: @new_comment } %>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
 
 
 <script>
