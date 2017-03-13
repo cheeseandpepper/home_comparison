@@ -2,6 +2,7 @@ class House < ApplicationRecord
 
   has_many :features
   has_many :house_images
+  has_many :comments
   after_touch :calculate_score, if: Proc.new { |h| h.has_score? }
   after_create :build_feature_factory
   #after_create :fetch_extra_details  

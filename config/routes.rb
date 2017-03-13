@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :settings
   resources :houses do
     resources :features
+    resources :comments
   end
 
   resources :feature_types

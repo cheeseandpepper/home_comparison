@@ -18,6 +18,7 @@
 @import 'slick';
 @import 'slick-theme';
 @import "font-awesome";
+@import "editable/bootstrap-editable";
 
 .page-top {
   margin-top: 30px
@@ -25,6 +26,11 @@
 
 .container {
   margin-left: 15px;
+}
+
+textarea {
+  border: none;
+  resize: none;
 }
 
 #sidebar.affix-top {

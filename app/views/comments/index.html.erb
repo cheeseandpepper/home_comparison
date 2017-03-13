@@ -1,0 +1,25 @@
+<div class='comments-page'>
+  <p id="notice"><%= notice %></p>
+
+  <h1>Comments</h1>
+  <%= link_to 'New Comment', new_house_comment_path(@house.id) %>
+  <%= fa_icon "plus-circle", class: "ajax-comment" %>
+  <% @comments.each do |comment| %>
+    <%= render partial: 'comment_panel', locals: { comment: comment } %>  
+  <% end %>
+
+  <br>
+</div>
+
+<script>
+  $('.ajax-comment').click(function(e) {
+    var partial = "<%= escape_javascript(render partial: 'comment_panel_blank', locals: { time_stamp: Time.now.to_i })%>"
+    $(partial).insertAfter($(e.target))
+    $(e.target).next().hide().fadeIn(600)
+  })
+  // $('.ajax-comment').click(function(e) {
+  //   $.post({
+  //     url: '/house/id/comments'
+  //   })
+  // })
+</script>

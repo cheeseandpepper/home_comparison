@@ -16,4 +16,6 @@
 //= require turbolinks
 //= require geocomplete
 //= require jquery.slick
+//= require editable/bootstrap-editable
+//= require editable/rails
 //= require_tree .

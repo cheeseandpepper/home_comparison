@@ -12,7 +12,9 @@ class HousesController < ApplicationController
   # GET /houses/1
   # GET /houses/1.json
   def show
-    @features = @house.features
+    @features    = @house.features
+    @new_comment = @house.comments.build
+    @comments    = @house.comments.where.not(id: nil)
   end
 
   # GET /houses/new

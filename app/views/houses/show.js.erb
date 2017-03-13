@@ -1,0 +1,3 @@
+$('.comment-column').prepend("<%= escape_javascript(render partial: '/houses/comment_panel', locals: {comment: @comment}) %>")
+$('.new-comment-name').val(null)
+$('.new-comment-body').val(null)

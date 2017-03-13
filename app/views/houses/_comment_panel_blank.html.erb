@@ -1,0 +1,11 @@
+<%= form_for [@house, new_comment], remote: true do |f| %>
+  <div class="panel panel-default">
+    <div class="panel-heading" id="score-panel-heading" data-temp-id="<%= time_stamp %>">
+      <h3 class="panel-title new">Add a new comment</h3>
+      <%= f.text_field :name, placeholder: 'Enter your name', class: 'new-comment-name' %>
+      <%= button_tag "Save", class: 'btn btn-primary add-comment' %>  
+    </div>
+    <div class="panel-body new">
+      <%= f.text_area :body, placeholder: 'Enter your comment', style: 'width:100%;', class: 'new-comment-body' %>
+  </div>
+<% end %>
