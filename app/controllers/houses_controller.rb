@@ -1,12 +1,25 @@
 class HousesController < ApplicationController
-  before_action :set_house, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
+  before_action :set_house, only: [:show, :edit, :update, :destroy, :unhide]
 
   USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
 
   # GET /houses
   # GET /houses.json
   def index
-    @houses = House.all
+    if params["search"]
+      if params["show_all"] == "true"
+        @houses = House.all.full_text_search(params["search"])
+      else
+        @houses = House.active.full_text_search(params["search"])
+      end
+    else
+      if params["show_all"] == "true"
+        @houses = House.all
+      else
+        @houses = House.active
+      end
+    end
   end
 
   # GET /houses/1
@@ -37,26 +50,33 @@ class HousesController < ApplicationController
       { address: address, citystatezip: citystatezip }
     )
 
-    @house = Factories::HouseFactory.new(data).house
-    page = HTTParty.get(@house.link, headers: {"User-Agent" => USER_AGENT})
-    @house.page = page
-    
-    @house.image_url = Nokogiri::XML(page).css('.hip-photo')[0].attr('src')
-    
-    if data.code != 0
-      render json: { errors: [{code: data.code, message: data.message}]}  
+    if data.code == 508
+      @house = House.new
+      render :new, notice: "House could not be created! #{data.message}"
     else
-      respond_to do |format|
-        if @house.save
-          format.html { redirect_to house_path(@house.id), notice: 'House was successfully created.' }
-          format.json { render :show, status: :created, location: @house }
-        else
-          format.html { render :new }
-          format.json { render json: @house.errors, status: :unprocessable_entity }
+      @house = Factories::HouseFactory.new(data).house
+      page = HTTParty.get(@house.link, headers: {"User-Agent" => USER_AGENT})
+      @house.page = page
+      @house.user_id = current_user.id
+      
+      @house.image_url = Nokogiri::XML(page).css('.hip-photo')[0]&.attr('src')
+      
+      if data.code != 0
+        Rails.console.warn("Code: #{data.code}")
+        render json: { errors: [{code: data.code, message: data.message}]}  
+      else
+        respond_to do |format|
+          if @house.save
+            format.html { redirect_to house_path(@house.id), notice: 'House was successfully created.' }
+            format.json { render :show, status: :created, location: @house }
+          else
+            binding.pry
+            format.html { render :new, notice: "House could not be created! #{e.message}" }
+            format.json { render json: @house.errors, status: :unprocessable_entity }
+          end
         end
-      end
+      end  
     end
-    
   end
 
   # PATCH/PUT /houses/1
@@ -76,9 +96,17 @@ class HousesController < ApplicationController
   # DELETE /houses/1
   # DELETE /houses/1.json
   def destroy
-    @house.destroy
+    @house.deactivate!
     respond_to do |format|
-      format.html { redirect_to houses_url, notice: 'House was successfully destroyed.' }
+      format.html { redirect_to houses_url, notice: 'House was successfully hidden.' }
+      format.json { head :no_content }
+    end
+  end
+
+  def unhide
+    @house.activate!
+    respond_to do |format|
+      format.html { redirect_to houses_url, notice: 'House was successfully unhidden.' }
       format.json { head :no_content }
     end
   end

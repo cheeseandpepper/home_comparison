@@ -1,10 +1,14 @@
 Rails.application.routes.draw do
+  devise_for :users
   root 'houses#index'
   put '/settings', to: 'settings#update', as: :update_settings
   resources :settings
   resources :houses do
     resources :features
     resources :comments
+    member do
+      post :unhide
+    end
   end
 
   resources :feature_types

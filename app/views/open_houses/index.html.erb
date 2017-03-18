@@ -1,41 +1,105 @@
-<p id="notice"><%= notice %></p>
-<%= link_to "Back", houses_path %>
 <h1>Open Houses</h1>
-
+<p>Any active houses will be accessible in the waypoints section.</p>
 <div class='row'>
   <div class=col-xs-6>
-    <button class='generate-route'><%= fa_icon "map", text: "Generate Route" %></button>
-    <button class='add-waypoint'><%= fa_icon "plus-circle", text: "Add Waypoint" %></button>
-    <%= render partial: 'waypoint_input'%>
+    <div id="right-panel">
+      <div>
+      <b>Start:</b>
+      
+      <select id="start">
+        <option value="3869 Tilden Ave, Culver City, CA 90232">Mike's House</option> 
+      </select>
+      
+      <br>
+      
+      <span><b>Waypoints:</b> (Ctrl+Click or Cmd+Click for multiple selection)</span>
+      
+      <select multiple id="waypoints" style='height: 300px'>
+        <%= @houses.each do |house| %>
+        <option value="<%= house.full_address %>"><%= house.full_address %></option>
+        <% end %>
+      </select>
+      
+      <br>
+      
+      <b>End:</b>
+
+      <select id="end">
+        <option value="3869 Tilden Ave, Culver City, CA 90232">Mike's House</option>
+      </select>
+      
+      <br>
+        <input type="submit" id="submit">
+      </div>
+      <div class='panel'>
+        <div id="directions-panel"></div>
+      </div>
+    </div>
     
   </div>
-
-  <br />
   
   <div class='col-xs-6'>
     <div class='row'>
       <div class='col-xs-12'>
-        <iframe id='open-houses-map' width="100%" height="480px" src="https://www.google.com/maps/embed/v1/place?key=<%= GOOGLE_MAPS_KEY %>&q=Los+Angeles+CA"></iframe>    
+        <div id="map"></div>
       </div>
     </div>
   </div>
 </div>
 
-<script>
-  $(".add-waypoint").click(function(e) {
-    $(e.target).parent().append("<%= escape_javascript(render partial: 'waypoint_input') %>")
-  })
 
-  $('.generate-route').click(function() {
-    var waypointStrings = [];
-    $('.waypoint_address').each(function(index, element) {
-      waypointStrings.push(element.value.split(' ').join('+'));
-    })
-    
-    var waypoints = waypointStrings.join("|");
-    var iframe    = document.getElementById('open-houses-map');
-    var baseSrc   = "https://www.google.com/maps/embed/v1/directions?key=<%= GOOGLE_MAPS_KEY %>&origin=3869+Tilden+Ave+LosAngeles+CA&destination=3869+Tilden+Ave+LosAngeles+CA&waypoints="
-  
-    iframe.src = baseSrc + waypoints;
-  })
+<script>
+  function initMap() {
+    var directionsService = new google.maps.DirectionsService;
+    var directionsDisplay = new google.maps.DirectionsRenderer;
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 11,
+      center: {lat: 34.05, lng: -118.24}
+    });
+    directionsDisplay.setMap(map);
+
+    document.getElementById('submit').addEventListener('click', function() {
+      calculateAndDisplayRoute(directionsService, directionsDisplay);
+    });
+  }
+
+  function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+    var waypts = [];
+    var checkboxArray = document.getElementById('waypoints');
+    for (var i = 0; i < checkboxArray.length; i++) {
+      if (checkboxArray.options[i].selected) {
+        waypts.push({
+          location: checkboxArray[i].value,
+          stopover: true
+        });
+      }
+    }
+
+    directionsService.route({
+      origin: document.getElementById('start').value,
+      destination: document.getElementById('end').value,
+      waypoints: waypts,
+      optimizeWaypoints: true,
+      travelMode: 'DRIVING'
+    }, function(response, status) {
+      if (status === 'OK') {
+        directionsDisplay.setDirections(response);
+        var route = response.routes[0];
+        var summaryPanel = document.getElementById('directions-panel');
+        summaryPanel.innerHTML = '';
+        // For each route, display summary information.
+        for (var i = 0; i < route.legs.length; i++) {
+          var routeSegment = i + 1;
+          summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
+              '</b><br>';
+          summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
+          summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
+          summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
+        }
+      } else {
+        window.alert('Directions request failed due to ' + status);
+      }
+    });
+  }
 </script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= GOOGLE_MAPS_KEY %>&callback=initMap"></script>

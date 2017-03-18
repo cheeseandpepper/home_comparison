@@ -1,17 +1,19 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Houses</h1>
-<button><%= link_to 'Open Houses', open_houses_path %></button>
-<button><%= link_to 'New House', new_house_path %></button>
-
-<button><%= link_to 'Feature Settings', settings_path %></button>
+<% if params["show_all"] == "true" %>
+  <h1>All Houses</h1>
+  <a href="<%= houses_path %>">Show Only Active Houses <span class="sr-only">(current)</span></a>
+<% else %>
+  <h1>Active Houses</h1>
+  <a href="<%= houses_path(show_all: true) %>">Show All Houses <span class="sr-only">(current)</span></a>
+<% end %>
 <table class='table'>
   <thead>
     <tr>
       <th>Address</th>
+      <th>Neighborhood</th>
       <th>Overall Score <%= fa_icon "info-circle", data: {
         toggle: "popover",
-        html: true, 
+        html: true,
+        viewport: ".color-list-container", 
         placement: "bottom", 
         content: "The score is a weighted average of all the features. Weights for each feature are the same for every house, so the score answers \"<b><em>How do I rate all the features and how important are those features?</em></b>\"".html_safe
         }, title: "How Is Score Calculated?" %> </th>
@@ -34,14 +36,19 @@
     <% @houses.each do |house| %>
       <tr>
         <td><%= house.address.split(',').first %></td>
+        <td><%= NEIGHBORHOODS_BY_ZIP[house.zip.to_i] %></td>
         <td><%= house.overall_score %></td>
         <td><%= house.per_dollar_score.round(2) %></td>
         <td><%= house.beds %></td>
         <td><%= house.baths %></td>
         <td><%= number_to_currency(house.price, precision: 0) %></td>
         <td><a href="<%= house.link %>" target="blank"><%= image_tag house.image_url, width: "100px" unless house.image_url.blank? %></a></td>
-        <td><%= link_to 'Show Features', house_path(house.id) %></td>
-        <td><%= link_to 'Destroy House', house, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show Details', house_path(house.id) %></td>
+        <% if house.active %>
+          <td><%= link_to 'Hide', house, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% else %>
+          <td><%= link_to 'Un-Hide',unhide_house_path(house.id), method: :post, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

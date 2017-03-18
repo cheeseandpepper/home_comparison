@@ -1,11 +1,10 @@
-<p id="notice"><%= notice %></p>
-<%= link_to "Back", houses_path %>
 <h1>Settings</h1>
 
 <div class='well'>
   <div class='row'>
     <div class='col-xs-6'>
       Create, edit, or destroy feature types here.
+      <%= link_to "Edit user settings", edit_user_registration_path(current_user.id)%>
     </div>
 
     <div class='col-xs-6'>

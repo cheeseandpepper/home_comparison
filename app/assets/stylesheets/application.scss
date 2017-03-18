@@ -28,6 +28,34 @@
   margin-left: 15px;
 }
 
+.detail-section {
+  //margin-left: 10px;
+}
+
+.color-picker-input {
+  vertical-align: middle;
+}
+
+.color-box {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+}
+
+.color-list-container {
+  overflow-y: scroll;
+  overflow-x: none;
+  width: 200px;
+  height: 100px;
+  box-sizing: border-box;
+}
+
+.selected-color-box {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+}
+
 textarea {
   border: none;
   resize: none;
@@ -62,4 +90,47 @@ textarea {
 
 tr:hover {
   background-color: #f9dafb;
+}
+
+
+
+#right-panel {
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+#right-panel select, #right-panel input {
+  font-size: 15px;
+}
+
+#right-panel select {
+  width: 100%;
+}
+
+#right-panel i {
+  font-size: 12px;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+#map {
+  height: 480px;
+  float: left;
+  width: 70%;
+  height: 480px;
+}
+#right-panel {
+  margin: 20px;
+  border-width: 2px;
+  height: 400px;
+  float: left;
+  text-align: left;
+  padding-top: 0;
+}
+#directions-panel {
+  margin-top: 10px;
+  padding: 10px;
 }
