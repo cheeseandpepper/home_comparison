@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   before_save :assign_color
+  has_many :houses
 
   def assign_color
     self.color = COLOR_LIST.sample

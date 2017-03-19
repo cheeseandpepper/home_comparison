@@ -9,15 +9,15 @@ class HousesController < ApplicationController
   def index
     if params["search"]
       if params["show_all"] == "true"
-        @houses = House.all.full_text_search(params["search"])
+        @houses = current_user.houses.full_text_search(params["search"])
       else
-        @houses = House.active.full_text_search(params["search"])
+        @houses = current_user.houses.active.full_text_search(params["search"])
       end
     else
       if params["show_all"] == "true"
-        @houses = House.all
+        @houses = current_user.houses
       else
-        @houses = House.active
+        @houses = current_user.houses.active
       end
     end
   end

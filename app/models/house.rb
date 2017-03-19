@@ -5,6 +5,7 @@ class House < ApplicationRecord
   has_many :features
   has_many :house_images
   has_many :comments
+  belongs_to :user
   before_save :set_neighborhood, :set_description
   after_touch :calculate_score, if: Proc.new { |h| h.has_score? }
   after_create :update_price
