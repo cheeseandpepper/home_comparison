@@ -1,0 +1,13 @@
+<div class='color-list-container'>
+  <% COLOR_LIST.each do |c| %>
+    <div class='color-box' style="background-color: <%= c %>" data-color="<%= c %>"></div>
+  <% end %>
+</div>
+
+<script>
+  $('.color-box').click(function(e) {
+    var color = $(e.target).data('color');
+    $('.selected-color-box').css( "background-color", color );
+    $('#user_color').val(color);
+  })
+</script>

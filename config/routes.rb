@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { registrations: "users/registrations" }
   root 'houses#index'
   put '/settings', to: 'settings#update', as: :update_settings
   resources :settings

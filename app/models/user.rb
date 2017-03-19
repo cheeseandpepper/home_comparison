@@ -4,8 +4,10 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  before_save :assign_color
+  before_create :assign_color
   has_many :houses
+
+  VALID_ROLES = ['buyer', 'collaborator']
 
   def assign_color
     self.color = COLOR_LIST.sample
