@@ -69,8 +69,10 @@ class HousesController < ApplicationController
         render json: { errors: [{code: data.code, message: data.message}]}  
       else
         respond_to do |format|
-          if House.find_by_address(@house.address).present?
-            format.html { redirect_to houses_path, notice: 'House already exists!' }
+          existing_house = House.find_by_address(@house.address)
+          if existing_house.present?
+            UserHouse.create!(user_id: current_user.id, house_id: existing_house.id)
+            format.html { redirect_to houses_path, notice: 'House was successfully saved.' }
           else
             if @house.save!
               user_house = UserHouse.create!(user_id: current_user.id, house_id: @house.id)
