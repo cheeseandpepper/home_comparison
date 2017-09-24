@@ -17,7 +17,7 @@
       <tr>
         <td><a href='<%= comp.external_link %>' target='_blank'><img width='120px' src='<%= comp.image %>' /></a></td>
         <td><%= comp.address %></td>
-        <td><%= comp.price.gsub("Sold: ", "") %></td>
+        <td><p style='<%= comp.comp_greater ? "color: green" : "color: red" %>'><%= comp.price.gsub("Sold: ", "") %></p></td>
         <td><%= comp.details %></td>
         <td>
           <div class='row'>
