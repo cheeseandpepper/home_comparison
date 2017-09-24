@@ -5,7 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   before_create :assign_color
-  has_many :houses
+  has_many :user_houses
+  has_many :houses, through: :user_houses
 
   VALID_ROLES = ['buyer', 'collaborator']
 

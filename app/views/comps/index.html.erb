@@ -1,0 +1,34 @@
+<h1>Comps for <%= @house.address %></h1>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Image</th>
+      <th>Address</th>
+      <th>Price Sold</th>
+      <th>Details</th>
+      <th>Diff</th>
+      <th>Date Sold</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @comps_object.each do |comp| %>
+      <tr>
+        <td><a href='<%= comp.external_link %>' target='_blank'><img width='120px' src='<%= comp.image %>' /></a></td>
+        <td><%= comp.address %></td>
+        <td><%= comp.price.gsub("Sold: ", "") %></td>
+        <td><%= comp.details %></td>
+        <td>
+          <div class='row'>
+            <p style="color: green;"><%= comp.more_diff %></p>
+          </div>
+          <div class='row'>
+            <p style="color: red;"><%= comp.less_diff%></p>
+          </div>
+        </td>
+        <td><%= comp.date_sold.gsub("Sold ", "") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

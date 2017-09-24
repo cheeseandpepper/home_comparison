@@ -1,17 +1,16 @@
 class HousesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:save_from_web]
   before_action :set_house, only: [:show, :edit, :update, :destroy, :unhide]
-
-  USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
+  skip_before_action :verify_authenticity_token, only: [:save_from_web]
 
   # GET /houses
   # GET /houses.json
   def index
     if params["search"]
       if params["show_all"] == "true"
-        @houses = current_user.houses.full_text_search(params["search"])
+        @houses = current_user.houses.search(params["search"])
       else
-        @houses = current_user.houses.active.full_text_search(params["search"])
+        @houses = current_user.houses.active.search(params["search"])
       end
     else
       if params["show_all"] == "true"
@@ -41,6 +40,11 @@ class HousesController < ApplicationController
 
   # POST /houses
   # POST /houses.json
+
+  def save_from_web
+    render html: "<strong style='color:green;'>Success!</strong>".html_safe
+  end
+
   def create
     structured_address = house_params[:address].split(', ')
     address            = structured_address[0]
@@ -54,12 +58,11 @@ class HousesController < ApplicationController
       @house = House.new
       render :new, notice: "House could not be created! #{data.message}"
     else
-      @house = Factories::HouseFactory.new(data).house
-      page = HTTParty.get(@house.link, headers: {"User-Agent" => USER_AGENT})
-      @house.page = page
-      @house.user_id = current_user.id
-      
-      @house.image_url = Nokogiri::XML(page).css('.hip-photo')[0]&.attr('src')
+      @house                = Factories::HouseFactory.new(data).house
+      page                  = HTTParty.get(@house.link, headers: {"User-Agent" => USER_AGENT})
+      @house.page           = page
+      @house.city_state_zip = citystatezip
+      @house.image_url      = Nokogiri::XML(page).css('.hip-photo')[0]&.attr('src')
       
       if data.code != 0
         Rails.console.warn("Code: #{data.code}")
@@ -67,6 +70,7 @@ class HousesController < ApplicationController
       else
         respond_to do |format|
           if @house.save
+            user_house = UserHouse.create!(user_id: current_user.id, house_id: @house.id)
             format.html { redirect_to house_path(@house.id), notice: 'House was successfully created.' }
             format.json { render :show, status: :created, location: @house }
           else

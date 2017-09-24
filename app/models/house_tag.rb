@@ -1,0 +1,2 @@
+class HouseTag < ApplicationRecord
+end

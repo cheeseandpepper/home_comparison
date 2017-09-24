@@ -20,13 +20,14 @@
       <th>Dollar Score <%= fa_icon "info-circle", data: {
         toggle: "popover", 
         placement: "bottom", 
-        content: "Dollar score is measuring the price against the score. High score and low price will be over 100 and the same is true for the opposite. Consider 100 to be average."
+        content: "Dollar score is measuring the price against the score. High score and low price will be over 100 and the same is true for the opposite. Consider 100 be \"you get exactly what you pay for\""
         }, title: "What is Dollar Score?" %>    
       </th>
       <th>Beds</th>
       <th>Baths</th>
       <th>Price</th>
       <th>Image</th>
+      <th></th>
       <th></th>
       <th></th>
     </tr>
@@ -44,6 +45,7 @@
         <td><%= number_to_currency(house.price, precision: 0) %></td>
         <td><a href="<%= house.link %>" target="blank"><%= image_tag house.image_url, width: "100px" unless house.image_url.blank? %></a></td>
         <td><%= link_to 'Show Details', house_path(house.id) %></td>
+        <td><%= link_to 'Comps', house_comps_index_path(house.id) %></td>
         <% if house.active %>
           <td><%= link_to 'Hide', house, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         <% else %>

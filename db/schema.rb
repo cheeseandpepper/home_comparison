@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170319003645) do
+ActiveRecord::Schema.define(version: 20170923160118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,13 @@ ActiveRecord::Schema.define(version: 20170319003645) do
     t.string  "url"
   end
 
+  create_table "house_tags", force: :cascade do |t|
+    t.integer  "house_id"
+    t.integer  "tag_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "houses", force: :cascade do |t|
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
@@ -67,7 +74,6 @@ ActiveRecord::Schema.define(version: 20170319003645) do
     t.string   "city"
     t.string   "state"
     t.string   "zip"
-    t.integer  "user_id"
     t.boolean  "active",         default: true
     t.string   "neighborhood"
     t.text     "description"
@@ -80,6 +86,19 @@ ActiveRecord::Schema.define(version: 20170319003645) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id", using: :btree
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.text     "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "user_houses", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "house_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

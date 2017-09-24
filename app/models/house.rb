@@ -1,23 +1,41 @@
 class House < ApplicationRecord
-  include PgSearch
-  pg_search_scope :full_text_search, against: [:price, :address, :neighborhood, :city, :state, :zip, :description]
+  searchkick(
+    word_middle: [:name, :address, :city, :neighborhood, :description]
+  )
+
+  def search_data
+    {
+      name:         name,
+      address:      address,
+      city:         city,
+      neighborhood: neighborhood,
+      description:  description
+    }
+  end
+  #include PgSearch
+  #pg_search_scope :full_text_search, against: [:price, :address, :neighborhood, :city, :state, :zip, :description]
 
   has_many :features
   has_many :house_images
   has_many :comments
+  has_many :tags, through: :house_tags
   belongs_to :user
-  before_save :set_neighborhood, :set_description
+
+  before_save :set_neighborhood, :set_description, :set_tags
   after_touch :calculate_score, if: Proc.new { |h| h.has_score? }
   after_create :update_price
   after_create :build_feature_factory
   #after_create :fetch_extra_details  
 
+  validates :address, uniqueness: true
 
   scope :active,   -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
 
   default_scope { order(score: :desc) }
   
+  USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
+
   def has_score?
     score.present?
   end
@@ -33,6 +51,27 @@ class House < ApplicationRecord
   def set_description
     self.description = get_description
   end
+
+  def set_tags
+    returh nil unless self.description
+    TagParser.new(self.description).create!
+  end
+
+  # def refresh_house
+  #   new_data = Rubillow::PropertyDetails.deep_search_results(
+  #     { address: address, citystatezip: city_state_zip }
+  #   )
+
+  #   if new_data.code == 508
+  #     return false
+  #   else
+  #     attributes = Factories::HouseFactory.new(new_data).build_params
+  #     assign_attributes(attributes)
+  #     self.page = HTTParty.get(self.link, headers: {"User-Agent" => USER_AGENT})
+      
+  #     self.image_url = Nokogiri::XML(page).css('.hip-photo')[0]&.attr('src')
+  #   end
+  # end
 
   def xml
     Nokogiri::XML.parse(page)

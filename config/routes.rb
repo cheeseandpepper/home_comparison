@@ -4,6 +4,12 @@ Rails.application.routes.draw do
   put '/settings', to: 'settings#update', as: :update_settings
   resources :settings
   resources :houses do
+    collection do 
+      post :save_from_web
+    end
+
+    get :comps, to: 'comps#index', as: :comps_index
+    
     resources :features
     resources :comments
     member do
