@@ -69,12 +69,11 @@ class HousesController < ApplicationController
         render json: { errors: [{code: data.code, message: data.message}]}  
       else
         respond_to do |format|
-          if @house.save
+          if @house.save!
             user_house = UserHouse.create!(user_id: current_user.id, house_id: @house.id)
             format.html { redirect_to house_path(@house.id), notice: 'House was successfully created.' }
             format.json { render :show, status: :created, location: @house }
           else
-            binding.pry
             format.html { render :new, notice: "House could not be created! #{e.message}" }
             format.json { render json: @house.errors, status: :unprocessable_entity }
           end
